@@ -47,7 +47,7 @@ const filterByCategory = catchError(async(req, res) => {
     return res.json(products)
 })
 
-const filterByName = catchError(async(req, res) => { //! EL
+const filterByName = catchError(async(req, res) => {
     const { title } = req.body
     console.log(title)
 
