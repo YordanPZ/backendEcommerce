@@ -69,7 +69,7 @@ const filterByName = catchError(async(req, res) => { //! EL
     */
     
     // Dividir el título en palabras individuales
-    const keywords = title.split(" ")
+    const keywords = title.toLowerCase().split(" ")
 
     const products = await Product.findAll({
         where: {
