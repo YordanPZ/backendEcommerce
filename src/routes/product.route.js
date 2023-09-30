@@ -12,7 +12,7 @@ productRouter.route("/category_id/:id")
     .get(filterByCategory)
 
 productRouter.route("/name")
-    .get(filterByName)
+    .post(filterByName)
 
 productRouter.route("/:id/image")
     .post(verifyJWT,setProductImage)
