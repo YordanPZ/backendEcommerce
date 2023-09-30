@@ -5,8 +5,6 @@ const Image = require("../models/Image")
 const { Op } = require("sequelize")
 
 
-//! FALTA: POST -> /products/:id/images (privado)
-
 const getAll = catchError(async(req, res) => {
     const results = await Product.findAll({include: Image})
     return res.json(results)

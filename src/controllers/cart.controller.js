@@ -1,6 +1,7 @@
 const catchError = require("../utils/catchError")
 const Cart = require("../models/Cart")
 const Product = require("../models/Product")
+const Image = require("../models/Image")
 
 const getAll = catchError(async(req, res) => {
     const { user } = req
@@ -10,7 +11,9 @@ const getAll = catchError(async(req, res) => {
 
 const create = catchError(async(req, res) => {
     const {productId} = req.body
-    const product = await Product.findByPk(productId,{attributes: { exclude: ["createdAt", "updatedAt"]}})
+    const product = await Product.findByPk(productId,{
+        include:Image 
+    },{attributes: { exclude: ["createdAt", "updatedAt"]}})
     
     if (!product) return res.status(404).json({message: "Product not found"})
     const { user } = req
