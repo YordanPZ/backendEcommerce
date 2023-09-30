@@ -2,6 +2,7 @@ const catchError = require("../utils/catchError")
 const Product = require("../models/Product")
 const Category = require("../models/Category")
 const Image = require("../models/Image")
+const { Op } = require("sequelize")
 
 
 //! FALTA: POST -> /products/:id/images (privado)
@@ -42,6 +43,61 @@ const update = catchError(async(req, res) => {
     return res.json(result[1][0])
 })
 
+const filterByCategory = catchError(async(req, res) => {
+    const { id } = req.params
+    const products = await Product.findAll({where: {categoryId:id}})
+    return res.json(products)
+})
+
+const filterByName = catchError(async(req, res) => { //! EL
+    const { title } = req.body
+
+    /*
+    Op.like: Se utiliza para realizar búsquedas que coincidan parcialmente con un patrón, similar al operador LIKE en SQL. Por ejemplo, %texto% busca cualquier cadena que contenga "texto".
+    
+    Op.and: Operador lógico "AND" en Sequelize. Permite construir condiciones de búsqueda donde todas las condiciones deben ser verdaderas.
+
+    Op.or: Operador lógico "OR" en Sequelize. Permite construir condiciones de búsqueda donde al menos una de las condiciones debe ser verdadera.
+
+    !Primer Nivel de [Op.or]:
+
+    ?En el nivel más externo de [Op.or], se busca productos que cumplan con cualquiera de las siguientes condiciones:
+    ?La condición en la propiedad title.
+    ?La condición en la propiedad description.
+
+    !Segundo Nivel de [Op.or] (para title y description):
+
+    ?Dentro de cada condición (tanto para title como para description), hay otro [Op.or]. Esto se debe a que quiero buscar productos que contengan cualquiera de las palabras en keywords en el título o la descripción. Cada iteración del map genera una condición "LIKE" para una palabra específica.
+    */
+    
+    // Dividir el título en palabras individuales
+    const keywords = title.toLowerCase().split(" ")
+
+    const products = await Product.findAll({
+        where: {
+            [Op.or]: [
+                {
+                // Buscar productos que contengan alguna de las palabras en el título
+                    title: {
+                        [Op.or]: keywords.map(keyword => ({
+                            [Op.like]: `%${keyword}%`
+                        }))
+                    }
+                },
+                {
+                // Buscar productos que contengan alguna de las palabras en la descripción
+                    description: {
+                        [Op.or]: keywords.map(keyword => ({
+                            [Op.like]: `%${keyword}%`
+                        }))
+                    }
+                }
+            ]
+        }
+    })
+    return res.json(products)
+})
+
 const setProductImage  = catchError(async(req, res) => {
     const { id } = req.params
     const productToSet = await Product.findByPk(id)
@@ -56,5 +112,7 @@ module.exports = {
     getOne,
     remove,
     update,
-    setProductImage
+    setProductImage,
+    filterByCategory,
+    filterByName
 }
