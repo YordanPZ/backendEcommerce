@@ -10,10 +10,11 @@ const getAll = catchError(async(req, res) => {
 
 const create = catchError(async(req, res) => {
     const {productId} = req.body
-    const product = await Product.findByPk(productId)
+    const product = await Product.findByPk(productId,{attributes: { exclude: ["createdAt", "updatedAt"]}})
+    
     if (!product) return res.status(404).json({message: "Product not found"})
     const { user } = req
-    const result = await Cart.create({...req.body,userId: user.id})
+    const result = await Cart.create({...req.body,userId: user.id,product:product})
     return res.status(201).json(result)
 })
 
