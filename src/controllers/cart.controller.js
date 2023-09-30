@@ -11,6 +11,12 @@ const getAll = catchError(async(req, res) => {
 
 const create = catchError(async(req, res) => {
     const {productId} = req.body
+    const isInCart = await Cart.findOne({where: {userId: req.user.id,productId}})
+    if (isInCart){
+        isInCart.quantity += 1
+        await isInCart.save()
+        return res.json(isInCart)
+    }
     const product = await Product.findByPk(productId,{
         include:Image 
     },{attributes: { exclude: ["createdAt", "updatedAt"]}})
