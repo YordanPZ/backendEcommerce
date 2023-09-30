@@ -43,7 +43,7 @@ const update = catchError(async(req, res) => {
 
 const filterByCategory = catchError(async(req, res) => {
     const { id } = req.params
-    const products = await Product.findAll({where: {categoryId:id}})
+    const products = await Product.findAll({where: {categoryId:id},include: Image})
     return res.json(products)
 })
 
@@ -91,7 +91,8 @@ const filterByName = catchError(async(req, res) => { //! EL
                     }
                 }
             ]
-        }
+            
+        },include: Image
     })
     return res.json(products)
 })
