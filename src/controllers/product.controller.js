@@ -78,7 +78,7 @@ const filterByName = catchError(async(req, res) => {
                 {
                 // Buscar productos que contengan alguna de las palabras en el título
                     title: {
-                        [Op.or]: keywords.map(keyword => ({
+                        [Op.or]: keywords?.map(keyword => ({
                             [Op.like]: `%${keyword}%`
                         }))
                     }
