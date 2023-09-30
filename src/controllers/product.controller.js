@@ -69,11 +69,11 @@ const filterByName = catchError(async(req, res) => { //! EL
     */
     
     // Dividir el título en palabras individuales
-    const keywords = title.toLowerCase().split(" ")
+    let keywords = title.split(/\s+/)
 
     const products = await Product.findAll({
         where: {
-            [Op.or]: [
+            [Op.or]: 
                 {
                 // Buscar productos que contengan alguna de las palabras en el título
                     title: {
@@ -81,16 +81,8 @@ const filterByName = catchError(async(req, res) => { //! EL
                             [Op.like]: `%${keyword}%`
                         }))
                     }
-                },
-                {
-                // Buscar productos que contengan alguna de las palabras en la descripción
-                    description: {
-                        [Op.or]: keywords.map(keyword => ({
-                            [Op.like]: `%${keyword}%`
-                        }))
-                    }
                 }
-            ]
+            
             
         },include: Image
     })
