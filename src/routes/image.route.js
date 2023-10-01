@@ -1,13 +1,13 @@
 const { getAll, create, remove } = require("../controllers/image.controller")
 const express = require("express")
 const upload = require("../utils/multer")
-const routerName = express.Router()
+const imageRouter = express.Router()
 
-routerName.route("/")
+imageRouter.route("/")
     .get(getAll)
     .post(upload.single("image"),create)
 
-routerName.route("/:id")
+imageRouter.route("/:id")
     .delete(remove)
 
-module.exports = routerName
+module.exports = imageRouter
