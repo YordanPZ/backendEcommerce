@@ -82,16 +82,16 @@ test("/GET /category_id/:id debe retornar los productos que pertenezcan a esa ca
     expect(response.body.length).toBeGreaterThanOrEqual(0)
 })
 
-test("/GET /products/name debe retornar los productos que coincidan con el titulo o la descripción", async () => {
+test("/POST /products/name debe retornar los productos que coincidan con el titulo o la descripción", async () => {
     const body = {
-        title: "test",
+        title: "test test",
         description: "test",
         categoryId:IdCategory.id,
         brand:"test" ,
         price:200
     }
     const product = await Product.create(body)
-    const response = await request(app).get("/products/name").send({title:body.title})
+    const response = await request(app).post("/products/name").send({title:body.title})
     await product.destroy()
     await IdCategory.destroy()
     expect(response.statusCode).toBe(200)

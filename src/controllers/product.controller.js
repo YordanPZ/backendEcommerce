@@ -49,7 +49,6 @@ const filterByCategory = catchError(async(req, res) => {
 
 const filterByName = catchError(async(req, res) => {
     const { title } = req.body
-    console.log(title)
 
     /*
     Op.like: Se utiliza para realizar búsquedas que coincidan parcialmente con un patrón, similar al operador LIKE en SQL. Por ejemplo, %texto% busca cualquier cadena que contenga "texto".

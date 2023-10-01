@@ -5,6 +5,8 @@ const User = require("../models/User")
 const Product = require("../models/Product")
 const Category = require("../models/Category")
 
+require("../models")
+
 let id
 let token
 
@@ -51,11 +53,11 @@ test("/POST /cart agregar un producto al carrito",async () => {
     }
     const response = await request(app).post("/cart").set("Authorization", `Bearer ${token}`).send(body)
     id = response.body.id
-    expect(response.statusCode).toBe(201)
-    expect(response.body.productId).toBe(product.id)
     await category.destroy()
     await product.destroy()
     await user.destroy()
+    expect(response.statusCode).toBe(201)
+    expect(response.body.productId).toBe(product.id)
 })
 
 test("/PUT /cart/:id debe actualizar el quantity de un producto", async () => {
